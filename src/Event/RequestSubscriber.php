@@ -108,7 +108,7 @@ class RequestSubscriber implements EventSubscriberInterface
       $previous_modifiers = $this->matchedModifiers->getMatched();
       if (count($previous_modifiers)) {
         /** @var ModifierMatchedEvent $previous */
-        $previous = last($previous_modifiers);
+        $previous = end($previous_modifiers);
         if ($previous->getProvider() == $match['provider_key']
           && $previous->getModifier() == $match['modifier']
           && $previous->getValue() == $match['value']
