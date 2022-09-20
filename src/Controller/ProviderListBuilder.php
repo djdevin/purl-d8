@@ -20,7 +20,7 @@ class ProviderListBuilder extends ConfigEntityListBuilder
   {
     return new static(
       $entity_type,
-      $container->get('entity.manager')->getStorage($entity_type->id()),
+      $container->get('entity_type.manager')->getStorage($entity_type->id()),
       $container->get('purl.plugin.provider_manager'),
       $container->get('purl.plugin.method_manager')
     );
@@ -49,7 +49,7 @@ class ProviderListBuilder extends ConfigEntityListBuilder
    */
   public function buildRow(EntityInterface $entity)
   {
-    $row['label'] = $this->getLabel($entity);
+    $row['label'] = $entity->label();
 
     $provider = $this->providerManager->getDefinition($entity->id());
     $method = $this->methodManager->getDefinition($entity->getMethodKey());
