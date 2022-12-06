@@ -185,12 +185,7 @@ function purl_form_node_type_form_alter(&$form, $form_state) {
  * settings
  */
 function purl_form_node_type_form_builder($entity_type, NodeTypeInterface $type, &$form, $form_state) {
-  if ($form_state->getValue('keep_context') == 1) {
-    $type->setThirdPartySetting('purl', 'keep_context', $form_state->getValue('keep_context'));
-    return;
-  }
-
-  $type->unsetThirdPartySetting('purl', 'keep_context');
+  $type->setThirdPartySetting('purl', 'keep_context', $form_state->getValue('keep_context'));
 }
 
 /**
