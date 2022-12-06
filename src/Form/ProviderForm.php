@@ -3,6 +3,8 @@
 namespace Drupal\purl\Form;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\purl\Plugin\ProviderManager;
 use Drupal\purl\Plugin\MethodPluginManager;
 use Drupal\Core\Entity\EntityForm;
@@ -13,11 +15,16 @@ use Drupal\Core\Form\FormStateInterface;
 class ProviderForm extends EntityForm
 {
 
-    /**
-     * @param \Drupal\Core\Entity\Query\QueryFactory $entity_query
-     *   The entity query.
-     */
-    public function __construct(QueryFactory $entity_query, ProviderManager $providerManager, MethodPluginManager $methodManager) {
+  /* @var $entityQuery EntityTypeManager */
+  private $entityQuery;
+
+  /**
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_query
+   *   The entity query.
+   * @param \Drupal\purl\Plugin\ProviderManager $providerManager
+   * @param \Drupal\purl\Plugin\MethodPluginManager $methodManager
+   */
+    public function __construct(EntityTypeManagerInterface $entity_query, ProviderManager $providerManager, MethodPluginManager $methodManager) {
         $this->entityQuery = $entity_query;
         $this->providerManager = $providerManager;
         $this->methodManager = $methodManager;
@@ -29,7 +36,7 @@ class ProviderForm extends EntityForm
     public static function create(ContainerInterface $container)
     {
         return new static(
-            $container->get('entity.query'),
+            $container->get('entity_type.manager'),
             $container->get('purl.plugin.provider_manager'),
             $container->get('purl.plugin.method_manager')
         );
@@ -109,9 +116,7 @@ class ProviderForm extends EntityForm
 
     public function exist($id)
     {
-        $entity = $this->entityQuery->get('purl_provider')
-            ->condition('provider_key', $id)
-            ->execute();
+        $entity = $this->entityQuery->getStorage('purl_provider')->load($id);
         return (bool) $entity;
     }
 }
