@@ -2,11 +2,11 @@
 
 namespace Drupal\purl\Entity;
 
-use Drupal\purl\Plugin\Purl\Provider\ProviderInterface;
 use Drupal\purl\Plugin\Purl\Method\MethodInterface;
+use Drupal\purl\Plugin\Purl\Provider\ProviderInterface;
 
-interface ProviderConfigInterface
-{
+interface ProviderConfigInterface {
+
   /**
    * @return string
    */
@@ -31,4 +31,5 @@ interface ProviderConfigInterface
    * @return ProviderInterface
    */
   public function getProviderPlugin();
+
 }

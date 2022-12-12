@@ -2,7 +2,8 @@
 
 namespace Drupal\purl\Plugin\Purl\Identifier;
 
-interface IdentifierProviderInterface
-{
-    public function getIdentifiers();
+interface IdentifierProviderInterface {
+
+  public function getIdentifiers();
+
 }

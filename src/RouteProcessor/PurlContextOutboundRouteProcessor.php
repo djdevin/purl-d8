@@ -18,8 +18,8 @@ use Drupal\purl\PurlEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Routing\Route;
 
-class PurlContextOutboundRouteProcessor implements OutboundRouteProcessorInterface, EventSubscriberInterface
-{
+class PurlContextOutboundRouteProcessor implements OutboundRouteProcessorInterface, EventSubscriberInterface {
+
   /**
    * @var MethodPluginManager
    */
@@ -28,15 +28,13 @@ class PurlContextOutboundRouteProcessor implements OutboundRouteProcessorInterfa
   /**
    * @var ModifierMatchedEvent[]
    */
-  private $events = array();
+  private $events = [];
 
-  public function __construct(MethodPluginManager $manager)
-  {
+  public function __construct(MethodPluginManager $manager) {
     $this->manager = $manager;
   }
 
-  public function processOutbound($route_name, Route $route, array &$parameters, BubbleableMetadata $bubbleable_metadata = NULL)
-  {
+  public function processOutbound($route_name, Route $route, array &$parameters, BubbleableMetadata $bubbleable_metadata = NULL) {
     foreach ($this->events as $event) {
       $method = $event->getMethod();
       if ($method instanceof OutboundRouteAlteringInterface) {
@@ -45,15 +43,14 @@ class PurlContextOutboundRouteProcessor implements OutboundRouteProcessorInterfa
     }
   }
 
-  public function onModifierMatched(ModifierMatchedEvent $event)
-  {
+  public function onModifierMatched(ModifierMatchedEvent $event) {
     $this->events[] = $event;
   }
 
-  public static function getSubscribedEvents()
-  {
+  public static function getSubscribedEvents() {
     return [
-      PurlEvents::MODIFIER_MATCHED => array('onModifierMatched', 300),
+      PurlEvents::MODIFIER_MATCHED => ['onModifierMatched', 300],
     ];
   }
+
 }

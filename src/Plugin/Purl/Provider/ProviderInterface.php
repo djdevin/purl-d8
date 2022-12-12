@@ -2,16 +2,15 @@
 
 namespace Drupal\purl\Plugin\Purl\Provider;
 
-use Drupal\purl\Modifier;
+interface ProviderInterface {
 
-interface ProviderInterface
-{
-    /**
-     * @return array
-     */
-    public function getModifierData();
+  /**
+   * @return array
+   */
+  public function getModifierData();
 
-    public function getProviderId();
+  public function getProviderId();
 
-    public function getLabel();
+  public function getLabel();
+
 }

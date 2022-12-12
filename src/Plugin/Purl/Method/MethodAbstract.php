@@ -4,20 +4,18 @@ namespace Drupal\purl\Plugin\Purl\Method;
 
 use Drupal\Component\Plugin\PluginBase;
 
-abstract class MethodAbstract extends PluginBase implements MethodInterface
-{
-    public function getId() 
-    {
-        return $this->getPluginId();
-    }
+abstract class MethodAbstract extends PluginBase implements MethodInterface {
 
-    public function getLabel()
-    {
-        return $this->pluginDefinition['label'];
-    }
+  public function getId() {
+    return $this->getPluginId();
+  }
 
-    public function getStages()
-    {
-      return $this->pluginDefinition['stages'];
-    }
+  public function getLabel() {
+    return $this->pluginDefinition['label'];
+  }
+
+  public function getStages() {
+    return $this->pluginDefinition['stages'];
+  }
+
 }

@@ -11,8 +11,8 @@ use Drupal\Component\Annotation\Plugin;
  *
  * @Annotation
  */
-class PurlProvider extends Plugin
-{
+class PurlProvider extends Plugin {
+
   /**
    * The plugin ID.
    *
@@ -29,13 +29,13 @@ class PurlProvider extends Plugin
    */
   public $label;
 
-    public function __construct($values)
-    {
-        parent::__construct($values);
+  public function __construct($values) {
+    parent::__construct($values);
 
-        if (!isset($this->definition['label'])) {
-            $id = preg_replace('/([^a-zA-Z0-9])+/', ' ', $this->definition['id']);
-            $this->definition['label'] = ucwords($id);
-        }
+    if (!isset($this->definition['label'])) {
+      $id = preg_replace('/([^a-zA-Z0-9])+/', ' ', $this->definition['id']);
+      $this->definition['label'] = ucwords($id);
     }
+  }
+
 }

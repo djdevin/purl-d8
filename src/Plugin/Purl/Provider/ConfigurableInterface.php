@@ -2,11 +2,12 @@
 
 namespace Drupal\purl\Plugin\Purl\Provider;
 
-interface ConfigurableInterface
-{
-    public function getSettings();
+interface ConfigurableInterface {
 
-    public function getDefaultSettings();
+  public function getSettings();
 
-    public function setSettings(array $settings);
+  public function getDefaultSettings();
+
+  public function setSettings(array $settings);
+
 }

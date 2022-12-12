@@ -17,13 +17,13 @@
 #     #_permission: 'administer'
 
 purl.modifiers:
-   path: admin/config/search/purl/modifiers
-   defaults:
-     _controller: Drupal\purl\Controller\ModifiersController::modifiers
-     _title: PURL Modifiers
-   requirements:
-     _permission: 'administer'
- # POST actions
+  path: admin/config/search/purl/modifiers
+  defaults:
+    _controller: Drupal\purl\Controller\ModifiersController::modifiers
+    _title: PURL Modifiers
+  requirements:
+    _permission: 'administer'
+  # POST actions
 
 # purl.admin.save_providers_config:
 #   path: admin/config/search/purl/save-settings

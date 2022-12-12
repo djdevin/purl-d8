@@ -14,8 +14,8 @@ use Symfony\Component\HttpFoundation\Request;
  * particular plugin.
  *
  */
-interface RequestAlteringInterface
-{
+interface RequestAlteringInterface {
+
   /**
    * Allow for altering the request when the RequestSubscriber event fires.
    *
@@ -27,4 +27,5 @@ interface RequestAlteringInterface
    *
    */
   public function alterRequest(Request $request, $identifier);
+
 }

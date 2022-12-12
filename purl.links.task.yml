@@ -12,13 +12,13 @@ purl.admin.modifiers:
   base_route: purl.admin
   weight: 10
 
-#purl.admin.methods:
+  #purl.admin.methods:
   #route_name: purl.admin.methods
   #title: Methods
   #base_route: purl.admin
   #weight: 10
 
-#purl.admin.providers:
+  #purl.admin.providers:
   #route_name: purl.admin.providers
   #title: PURL Providers
   #parent_id: purl.admin

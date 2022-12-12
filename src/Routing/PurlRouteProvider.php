@@ -2,19 +2,17 @@
 
 namespace Drupal\purl\Routing;
 
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Path\CurrentPathStack;
-use Drupal\Core\Path\PathValidator;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Drupal\Core\Routing\RouteProvider;
 use Drupal\Core\State\StateInterface;
 use Drupal\purl\ContextHelper;
 use Drupal\purl\MatchedModifiers;
 use Symfony\Component\HttpFoundation\Request;
-use \Drupal\Core\Database\Connection;
 
 /**
  * A Route Provider front-end for all Drupal-stored routes.
@@ -47,7 +45,7 @@ class PurlRouteProvider extends RouteProvider {
    *
    * @var \Symfony\Component\Routing\Route[]
    */
-  protected $routes = array();
+  protected $routes = [];
 
   /**
    * A cache of already-loaded serialized routes, keyed by route name.
@@ -111,18 +109,7 @@ class PurlRouteProvider extends RouteProvider {
    * @param string $table
    *   (Optional) The table in the database to use for matching. Defaults to 'router'
    */
-  public function __construct(
-    Connection $connection,
-    StateInterface $state,
-    CurrentPathStack $current_path,
-    CacheBackendInterface $cache_backend,
-    InboundPathProcessorInterface $path_processor,
-    CacheTagsInvalidatorInterface $cache_tag_invalidator,
-    $table = 'router',
-    LanguageManagerInterface $language_manager = NULL,
-    ContextHelper $contextHelper,
-    MatchedModifiers $matchedModifiers
-  ) {
+  public function __construct(Connection $connection, StateInterface $state, CurrentPathStack $current_path, CacheBackendInterface $cache_backend, InboundPathProcessorInterface $path_processor, CacheTagsInvalidatorInterface $cache_tag_invalidator, $table = 'router', LanguageManagerInterface $language_manager = NULL, ContextHelper $contextHelper, MatchedModifiers $matchedModifiers) {
     parent::__construct($connection, $state, $current_path, $cache_backend, $path_processor, $cache_tag_invalidator, $table, $language_manager);
     $this->contextHelper = $contextHelper;
     $this->matchedModifiers = $matchedModifiers;
@@ -168,4 +155,5 @@ class PurlRouteProvider extends RouteProvider {
       return $routes;
     }
   }
+
 }

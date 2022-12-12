@@ -2,7 +2,6 @@
 
 namespace Drupal\purl\Event;
 
-use Drupal\Core\Extension\ModuleHandler;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\purl\Entity\Provider;
 use Drupal\purl\MatchedModifiers;
@@ -11,14 +10,12 @@ use Drupal\purl\Plugin\Purl\Method\RequestAlteringInterface;
 use Drupal\purl\PurlEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-class RequestSubscriber implements EventSubscriberInterface
-{
+class RequestSubscriber implements EventSubscriberInterface {
+
   /**
    * @var ModifierIndex
    */
@@ -34,44 +31,35 @@ class RequestSubscriber implements EventSubscriberInterface
    */
   protected $moduleHandler;
 
-  public function __construct(
-    ModifierIndex $modifierIndex,
-    MatchedModifiers $matchedModifiers,
-    ModuleHandlerInterface $moduleHandler
-  )
-  {
+  public function __construct(ModifierIndex $modifierIndex, MatchedModifiers $matchedModifiers, ModuleHandlerInterface $moduleHandler) {
     $this->modifierIndex = $modifierIndex;
     $this->matchedModifiers = $matchedModifiers;
     $this->moduleHandler = $moduleHandler;
   }
 
-  public static function getSubscribedEvents()
-  {
-    return array(
+  public static function getSubscribedEvents() {
+    return [
       // RouterListener comes in at 32. We need to go before it.
-      KernelEvents::REQUEST => array('onRequest', 50),
-    );
+      KernelEvents::REQUEST => ['onRequest', 50],
+    ];
   }
 
   /**
    * @return \Drupal\purl\Modifier[]
    */
-  protected function getModifiers()
-  {
+  protected function getModifiers() {
     return $this->modifierIndex->findAll();
   }
 
-  protected function getMethodForProvider($providerId)
-  {
+  protected function getMethodForProvider($providerId) {
     return Provider::load($providerId)->getMethodPlugin();
   }
 
-  public function onRequest(GetResponseEvent $event, $eventName, EventDispatcherInterface $dispatcher)
-  {
+  public function onRequest(GetResponseEvent $event, $eventName, EventDispatcherInterface $dispatcher) {
     $request = $event->getRequest();
     $modifiers = $this->getModifiers();
 
-    $matches = array();
+    $matches = [];
 
     foreach ($modifiers as $modifier) {
 
@@ -80,13 +68,13 @@ class RequestSubscriber implements EventSubscriberInterface
       $method = $modifier->getMethod();
 
       if ($method->contains($request, $modifierKey)) {
-        $matches[$provider->getProviderId()] = array(
+        $matches[$provider->getProviderId()] = [
           'method' => $method,
           'modifier' => $modifierKey,
           'provider_key' => $provider->getProviderId(),
           'provider' => $modifier->getProvider(),
-          'value' => $modifier->getValue()
-        );
+          'value' => $modifier->getValue(),
+        ];
       }
     }
 

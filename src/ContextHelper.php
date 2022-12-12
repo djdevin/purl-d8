@@ -2,24 +2,24 @@
 
 namespace Drupal\purl;
 
+use Drupal;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\purl\Entity\Provider;
 use Drupal\purl\Plugin\ModifierIndex;
 use Drupal\purl\Plugin\Purl\Method\MethodInterface;
 use Drupal\purl\Plugin\Purl\Method\PreGenerateHookInterface;
+use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
 
-class ContextHelper
-{
+class ContextHelper {
 
   /**
    * @var EntityStorageInterface
    */
   protected $storage;
 
-  public function __construct()
-  {
+  public function __construct() {
   }
 
   /**
@@ -28,13 +28,12 @@ class ContextHelper
    * @param array $options
    * @param Request|null $request
    * @param BubbleableMetadata|null $metadata
+   *
    * @return mixed
    */
-  public function processOutbound(array $contexts, $path, array &$options, Request $request = null, BubbleableMetadata $metadata = null)
-  {
+  public function processOutbound(array $contexts, $path, array &$options, Request $request = NULL, BubbleableMetadata $metadata = NULL) {
 
     $result = $path;
-
 
 
     /** @var Context $context */
@@ -44,11 +43,12 @@ class ContextHelper
         continue;
       }
 
-      $contextResult = null;
+      $contextResult = NULL;
 
       if ($context->getAction() == Context::ENTER_CONTEXT) {
         $contextResult = $context->getMethod()->enterContext($context->getModifier(), $result, $options);
-      } elseif ($context->getAction() == Context::EXIT_CONTEXT) {
+      }
+      elseif ($context->getAction() == Context::EXIT_CONTEXT) {
         $contextResult = $context->getMethod()->exitContext($context->getModifier(), $result, $options);
       }
 
@@ -65,8 +65,7 @@ class ContextHelper
    * @param array $options
    * @param $collect_bubblable_metadata
    */
-  public function preGenerate(array $contexts, $routeName, array &$parameters, array &$options, $collect_bubblable_metadata)
-  {
+  public function preGenerate(array $contexts, $routeName, array &$parameters, array &$options, $collect_bubblable_metadata) {
     $this->ensureContexts($contexts);
 
     /** @var Context $context */
@@ -78,7 +77,8 @@ class ContextHelper
 
       if ($context->getAction() == Context::ENTER_CONTEXT) {
         $context->getMethod()->preGenerateEnter($context->getModifier(), $routeName, $parameters, $options, $collect_bubblable_metadata);
-      } elseif ($context->getAction() == Context::EXIT_CONTEXT) {
+      }
+      elseif ($context->getAction() == Context::EXIT_CONTEXT) {
         $context->getMethod()->preGenerateExit($context->getModifier(), $routeName, $parameters, $options, $collect_bubblable_metadata);
       }
 
@@ -87,13 +87,13 @@ class ContextHelper
 
   /**
    * @param array $contexts
+   *
    * @return bool
    */
-  private function ensureContexts(array $contexts)
-  {
+  private function ensureContexts(array $contexts) {
     foreach ($contexts as $index => $context) {
       if (!$context instanceof Context) {
-        throw new \InvalidArgumentException(sprintf('#%d is not a context.', $index + 1));
+        throw new InvalidArgumentException(sprintf('#%d is not a context.', $index + 1));
       }
     }
   }
@@ -101,16 +101,17 @@ class ContextHelper
   /**
    * @param array $map
    *   Provider Id => modifier.
+   *
    * @return array
    */
   public function createContextsFromMap(array $map) {
     if (isset($map['id'])) {
       // get the context for a specific purl object
       /** @var ModifierIndex $modifierIndex */
-      $modifierIndex = \Drupal::service('purl.modifier_index');
+      $modifierIndex = Drupal::service('purl.modifier_index');
       $modifiers = $modifierIndex->getModifiersById($map['id']);
       $mod = reset($modifiers);
-      return [new Context(trim($mod->getModifierKey(),'/'), $mod->getMethod())];
+      return [new Context(trim($mod->getModifierKey(), '/'), $mod->getMethod())];
     }
 
     if (count($map) === 0) {
@@ -124,11 +125,12 @@ class ContextHelper
     }, $providers);
   }
 
-  protected function getStorage() : EntityStorageInterface {
+  protected function getStorage(): EntityStorageInterface {
     if (empty($this->storage)) {
-      $this->storage = \Drupal::entityTypeManager ()->getStorage('purl_provider');
+      $this->storage = Drupal::entityTypeManager()->getStorage('purl_provider');
     }
 
     return $this->storage;
   }
+
 }

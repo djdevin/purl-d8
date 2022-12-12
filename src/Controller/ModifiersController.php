@@ -2,15 +2,13 @@
 
 namespace Drupal\purl\Controller;
 
-use Drupal\purl\Plugin\ProviderManager;
-use Drupal\purl\Plugin\MethodPluginManager;
+use Drupal;
 use Drupal\purl\Plugin\ModifierIndex;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Drupal\purl\Entity\Provider;
 
-class ModifiersController extends BaseController
-{
+class ModifiersController extends BaseController {
+
   /**
    * @var ModifierIndex
    */
@@ -20,8 +18,7 @@ class ModifiersController extends BaseController
 
   protected $methodManager;
 
-  public static function create(ContainerInterface $container)
-  {
+  public static function create(ContainerInterface $container) {
     return new self(
       $container->get('purl.modifier_index')
     );
@@ -34,30 +31,29 @@ class ModifiersController extends BaseController
     $this->modifierIndex = $modifierIndex;
   }
 
-  private function stringify($value)
-  {
+  private function stringify($value) {
     // This can be improved a lot more.
     if (is_scalar($value) || is_array($value)) {
       return json_encode($value);
-    } else {
-      return (string)$value;
+    }
+    else {
+      return (string) $value;
     }
   }
 
-  public function modifiers(Request $request)
-  {
-    $build = array();
+  public function modifiers(Request $request) {
+    $build = [];
 
-    $ids = \Drupal::entityQuery('purl_provider')
+    $ids = Drupal::entityQuery('purl_provider')
       ->execute();
 
-    $headers = array('provider', 'modifier', 'value');
+    $headers = ['provider', 'modifier', 'value'];
 
     $headers = array_map(function ($header) {
-      return array('data' => t($header));
+      return ['data' => t($header)];
     }, $headers);
 
-    $rows = array();
+    $rows = [];
 
     foreach ($this->modifierIndex->findModifiers() as $modifier) {
 
@@ -67,37 +63,37 @@ class ModifiersController extends BaseController
         continue;
       }
 
-      $row = array();
+      $row = [];
 
-      $row[] = array(
-        'data' => $provider->getLabel()
-      );
+      $row[] = [
+        'data' => $provider->getLabel(),
+      ];
 
-      $row[] = array(
-        'data' => array(
+      $row[] = [
+        'data' => [
           '#type' => 'html_tag',
           '#tag' => 'code',
           '#value' => $modifier->getModifierKey(),
-        ),
-      );
+        ],
+      ];
 
-      $row[] = array(
-        'data' => array(
+      $row[] = [
+        'data' => [
           '#type' => 'html_tag',
           '#tag' => 'code',
           '#value' => $this->stringify($modifier->getValue()),
-        ),
-      );
+        ],
+      ];
 
       $rows[] = $row;
     }
 
 
-    $build['modifiers'] = array(
+    $build['modifiers'] = [
       '#theme' => 'table',
       '#header' => $headers,
       '#rows' => $rows,
-    );
+    ];
 
     return $build;
   }

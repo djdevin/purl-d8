@@ -2,20 +2,21 @@
 
 namespace Drupal\purl\Event;
 
-use Drupal\Core\Url;
+use Drupal;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\TrustedRedirectResponse;
+use Drupal\Core\Site\Settings;
+use Drupal\Core\Url;
+use Drupal\node\NodeInterface;
+use Drupal\purl\MatchedModifiers;
 use Drupal\purl\PurlEvents;
+use Drupal\redirect\Exception\RedirectLoopException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\purl\MatchedModifiers;
-use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Drupal\Core\Site\Settings;
 use Symfony\Component\HttpFoundation\Response;
-use Drupal\redirect\Exception\RedirectLoopException;
-use Drupal\node\NodeInterface;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * Event subscriber for redirecting nodes that do not need to keep context.
@@ -47,8 +48,8 @@ class PurlNodeContextRoutes implements EventSubscriberInterface {
    * PurlNodeContextRoutes constructor.
    *
    * @param EntityTypeManagerInterface $entity_type_manager
-   * @param RouteMatchInterface        $route_match
-   * @param MatchedModifiers           $matchedModifiers
+   * @param RouteMatchInterface $route_match
+   * @param MatchedModifiers $matchedModifiers
    */
   public function __construct(EntityTypeManagerInterface $entity_type_manager, RouteMatchInterface $route_match, MatchedModifiers $matchedModifiers) {
     $this->entityStorage = $entity_type_manager->getStorage('node_type');
@@ -71,7 +72,7 @@ class PurlNodeContextRoutes implements EventSubscriberInterface {
 
     if (!$isAdminRoute
       && $matched = $this->matchedModifiers->getMatched()
-      && $entity instanceof NodeInterface
+        && $entity instanceof NodeInterface
     ) {
       $node_type = $this->entityStorage->load($entity->bundle());
       $purl_settings = $node_type->getThirdPartySettings('purl');
@@ -91,9 +92,8 @@ class PurlNodeContextRoutes implements EventSubscriberInterface {
             $dispatcher_interface->dispatch(PurlEvents::EXITED_CONTEXT, $new_event);
             $event->setResponse($new_event->getResponse());
             return;
-          }
-          catch (RedirectLoopException $e) {
-            \Drupal::logger('redirect')->warning($e->getMessage());
+          } catch (RedirectLoopException $e) {
+            Drupal::logger('redirect')->warning($e->getMessage());
             $response = new Response();
             $response->setStatusCode(503);
             $response->setContent('Service unavailable');
@@ -101,9 +101,10 @@ class PurlNodeContextRoutes implements EventSubscriberInterface {
             return;
           }
         }
-      } else {
+      }
+      else {
         if (!isset($purl_settings['keep_context']) || !$purl_settings['keep_context']) {
-          \Drupal::messenger()->addStatus($entity->label() . ' is currently unpublished. This node is set to remove the context, anonymous users will be redirected to the main base domain.', TRUE);
+          Drupal::messenger()->addStatus($entity->label() . ' is currently unpublished. This node is set to remove the context, anonymous users will be redirected to the main base domain.', TRUE);
         }
       }
     }
@@ -117,4 +118,5 @@ class PurlNodeContextRoutes implements EventSubscriberInterface {
     $events[KernelEvents::REQUEST][] = ['purlCheckNodeContext', -21];
     return $events;
   }
+
 }

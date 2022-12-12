@@ -4,26 +4,24 @@ namespace Drupal\purl;
 
 use Drupal\purl\Event\ModifierMatchedEvent;
 
-class MatchedModifiers
-{
+class MatchedModifiers {
+
   /**
    * @var ModifierMatchedEvent[]
    */
-  private $matched = array();
+  private $matched = [];
 
   /**
    * @return Event\ModifierMatchedEvent[]
    */
-  public function getMatched()
-  {
+  public function getMatched() {
     return $this->getEvents();
   }
 
   /**
    * @return Event\ModifierMatchedEvent[]
    */
-  public function getEvents()
-  {
+  public function getEvents() {
     return $this->matched;
   }
 
@@ -32,15 +30,14 @@ class MatchedModifiers
    *
    * @return null
    */
-  public function add(ModifierMatchedEvent $event)
-  {
+  public function add(ModifierMatchedEvent $event) {
     $this->matched[] = $event;
   }
 
-  public function createContexts($action = null)
-  {
+  public function createContexts($action = NULL) {
     return array_map(function (ModifierMatchedEvent $event) use ($action) {
       return new Context($event->getModifier(), $event->getMethod(), $action);
     }, $this->getMatched());
   }
+
 }

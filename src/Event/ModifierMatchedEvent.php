@@ -5,8 +5,8 @@ namespace Drupal\purl\Event;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\Request;
 
-class ModifierMatchedEvent extends Event
-{
+class ModifierMatchedEvent extends Event {
+
   /**
    * @var Request
    */
@@ -38,8 +38,7 @@ class ModifierMatchedEvent extends Event
    * @param string $modifierKey
    * @param mixed $value
    */
-  public function __construct(Request $request, $providerKey, $methodKey, $modifierKey, $value)
-  {
+  public function __construct(Request $request, $providerKey, $methodKey, $modifierKey, $value) {
     $this->request = $request;
     $this->providerKey = $providerKey;
     $this->modifierKey = $modifierKey;
@@ -50,40 +49,35 @@ class ModifierMatchedEvent extends Event
   /**
    * @return Request
    */
-  public function getRequest()
-  {
+  public function getRequest() {
     return $this->request;
   }
 
   /**
    * @return string
    */
-  public function getProvider()
-  {
+  public function getProvider() {
     return $this->providerKey;
   }
 
   /**
    * @return string
    */
-  public function getModifier()
-  {
+  public function getModifier() {
     return $this->modifierKey;
   }
 
   /**
    * @return string
    */
-  public function getMethod()
-  {
+  public function getMethod() {
     return $this->methodKey;
   }
 
   /**
    * @return mixed
    */
-  public function getValue()
-  {
+  public function getValue() {
     return $this->value;
   }
 

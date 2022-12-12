@@ -3,15 +3,14 @@
 namespace Drupal\purl\Plugin;
 
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\purl\Plugin\Purl\Provider\ProviderInterface;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
-use Drupal\Core\Database\Connection;
+use Traversable;
 
-class ProviderManager extends DefaultPluginManager implements ContainerAwareInterface
-{
+class ProviderManager extends DefaultPluginManager implements ContainerAwareInterface {
 
   use ContainerAwareTrait;
 
@@ -21,16 +20,11 @@ class ProviderManager extends DefaultPluginManager implements ContainerAwareInte
    * We store created instances here and return the right one when queried
    * for again. We only one one instance for each method plugin.
    */
-  protected $providers = array();
+  protected $providers = [];
 
   protected $connection;
 
-  public function __construct(
-    \Traversable $namespaces,
-    CacheBackendInterface $cacheBackend,
-    ModuleHandlerInterface $moduleHandler
-  )
-  {
+  public function __construct(Traversable $namespaces, CacheBackendInterface $cacheBackend, ModuleHandlerInterface $moduleHandler) {
     parent::__construct(
       'Plugin/Purl/Provider',
       $namespaces,
@@ -41,13 +35,11 @@ class ProviderManager extends DefaultPluginManager implements ContainerAwareInte
     $this->setCacheBackend($cacheBackend, 'purl_provider_plugins');
   }
 
-  public function setConnection(Connection $connection)
-  {
+  public function setConnection(Connection $connection) {
     $this->connection = $connection;
   }
 
-  public function getProvider($id)
-  {
+  public function getProvider($id) {
     if (!isset($this->providers[$id])) {
 
       $plugin = $this->createInstance($id);
@@ -61,4 +53,5 @@ class ProviderManager extends DefaultPluginManager implements ContainerAwareInte
 
     return $this->providers[$id];
   }
+
 }
