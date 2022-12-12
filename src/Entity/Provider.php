@@ -30,8 +30,8 @@ use Drupal\purl\Plugin\Purl\Provider\ProviderInterface;
  *    "label" = "label"
  *  },
  *  links = {
- *    "edit-form" = "/admin/config/search/purl/provider/{purl}",
- *    "delete-form" = "/admin/config/search/purl/provider/{purl}/delete"
+ *    "edit-form" = "/admin/config/search/purl/provider/{purl_provider}",
+ *    "delete-form" = "/admin/config/search/purl/provider/{purl_provider}/delete"
  *  },
  *  config_export = {
  *    "id",
