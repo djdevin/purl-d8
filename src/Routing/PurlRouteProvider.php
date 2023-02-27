@@ -109,7 +109,7 @@ class PurlRouteProvider extends RouteProvider {
    * @param string $table
    *   (Optional) The table in the database to use for matching. Defaults to 'router'
    */
-  public function __construct(Connection $connection, StateInterface $state, CurrentPathStack $current_path, CacheBackendInterface $cache_backend, InboundPathProcessorInterface $path_processor, CacheTagsInvalidatorInterface $cache_tag_invalidator, $table = 'router', LanguageManagerInterface $language_manager = NULL, ContextHelper $contextHelper, MatchedModifiers $matchedModifiers) {
+  public function __construct(Connection $connection, StateInterface $state, CurrentPathStack $current_path, CacheBackendInterface $cache_backend, InboundPathProcessorInterface $path_processor, CacheTagsInvalidatorInterface $cache_tag_invalidator, $table = 'router', LanguageManagerInterface $language_manager = NULL, ContextHelper $contextHelper = NULL, MatchedModifiers $matchedModifiers = NULL) {
     parent::__construct($connection, $state, $current_path, $cache_backend, $path_processor, $cache_tag_invalidator, $table, $language_manager);
     $this->contextHelper = $contextHelper;
     $this->matchedModifiers = $matchedModifiers;
